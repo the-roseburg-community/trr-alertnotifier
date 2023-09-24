@@ -1,0 +1,8 @@
+services:
+  alert-notifier:
+    build: .
+  volumes:
+    - state
+
+volumes:
+  state:

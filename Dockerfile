@@ -5,3 +5,5 @@ WORKDIR /app
 RUN pip3 install requests mailersend
 
 COPY . .
+
+CMD ["python3", "alert-check.py"]

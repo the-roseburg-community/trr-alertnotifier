@@ -71,11 +71,12 @@ def mail(subject, content):
 
 
 ## Script start
-state_file_path = "/state/previous_state.txt" # Use a state file in order to understand if the alert already sent a text or if the alert message has changed.
+state_file_path = "previous_state.txt" # Use a state file in order to understand if the alert already sent a text or if the alert message has changed.
 try:
   with open(state_file_path, "r") as state_file:
     previous_state = state_file.read().strip()
 except FileNotFoundError:
+  print("Creating state file")
   previous_state = None
 
 try:
@@ -106,7 +107,7 @@ try:
 
         # Save the updated state to the file
         with open(state_file_path, "w") as state_file:
-          state_file.write(str(previous_state))
+          state_file.write(str(current_value))
   else:
     print("Failed to retrieve data from the API. Status code:",
       response.status_code)
