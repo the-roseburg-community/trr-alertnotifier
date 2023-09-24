@@ -1,2 +1,3 @@
-USERNAME=<add username here>
-PASSWORD=<add password here>
+USERNAME=<broadcastify username>
+PASSWORD=<broadcastify password>
+MAILSEND_API_KEY=<mailersend API key>
