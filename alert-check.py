@@ -2,7 +2,7 @@
 # Email: joseph@josephziegler.com
 # Description:
 #   This python application sends email-based text messages to all numbers listed in the numbers.txt file if
-#   a specific feed contains an alert.
+#   a specific feed on Broadcastify contains an alert that belongs to the account owner of the credentials used.
 
 import os
 import requests                # Install with pip
