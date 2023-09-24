@@ -5,7 +5,7 @@ Although this mentions SMS, this script uses the email-based SMS messaging that 
 
 ## To Use
 Update the env file with your Broadcastify username and password.
-Emails are handled by a email service. MailerSend is used in this script (mailersend.com). Get an API token from this service.
+Emails are handled by an email service. MailerSend is used in this script (mailersend.com). Get an API token from this service and add it to the env file as well.
 
 ## Docker
 To run, simply build the container and then run it:
