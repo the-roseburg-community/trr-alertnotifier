@@ -17,13 +17,16 @@ feed_id = "40833"                                       # Broadcastify Feed ID
 
 # Phone carrier dictionary
 carrier_mapping = {
-  "googlefi": "msg.fi.google.com",
-  "verizon": "vtext.com",
-  "tmobile": "tmomail.net",
   "att": "txt.att.net",
+  "boostmobile": "sms.myboostmobile.com",
+  "cricketwireless": "sms.cricketwireless.net",
+  "googlefi": "msg.fi.google.com",
+  "metropcs": "mymetropcs.com",
   "spectrum": "vtext.com",
-  "xfinity": "vtext.com",
-  "uscellular": "email.uscc.net"
+  "tmobile": "tmomail.net",
+  "uscellular": "email.uscc.net",
+  "verizon": "vtext.com",
+  "xfinity": "vtext.com"
 }
 
 api_url = "https://api.broadcastify.com/owner/"
