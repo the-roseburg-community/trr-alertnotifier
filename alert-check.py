@@ -97,10 +97,10 @@ try:
     counties = content["Counties"]
     county_info = counties[0]
 
-    feed_name = content["descr"]
-    listeners = content["listeners"]
-    county_name = county_info['name']
-    county_state = county_info["stateName"]
+    feed_name = content["descr"]            # Not calling this anywhere but here if needed
+    listeners = content["listeners"]        # Not calling this anywhere but here if needed
+    county_name = county_info['name']       # Not calling this anywhere but here if needed
+    county_state = county_info["stateName"] # Not calling this anywhere but here if needed
 
     # Because the API will not return information about an alert (according to support), just do a basic web get request
     website_response = requests.get(web_url) # Fetch the data from the Broadcastify feed
@@ -119,7 +119,6 @@ try:
         current_value = current_value.replace('\n', ' ').replace('\r', '')
 
         # If the div with class "messageBox" is found, print its contents
-        #print("message is %s" % current_value)
         if previous_state is None or previous_state != current_value: # Only send text if the message is recent.
           print("The Roseburg Receiver - Feed %s | %s County, %s has an alert! Alert: %s" % (feed_name, county_name, county_state, current_value))
           #mail("The Roseburg Receiver", "The Roseburg Receiver - " + feed_name + " | " + county_name + " County, " + county_state + " has an alert! Alert: " + current_value)
