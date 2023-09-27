@@ -7,6 +7,8 @@
 import os
 import requests                # Install with pip
 from mailersend import emails  # Install with pip
+from bs4 import BeautifulSoup  # Install with pip
+import re
 
 from_address = "noreply@roseburg.city"
 
@@ -14,6 +16,8 @@ PASSWORD = os.getenv('PASSWORD')                        # Environment variable f
 USERNAME = os.getenv('USERNAME')                        # Environment variable for Broadcastify feed owner username
 mailer = emails.NewEmail(os.getenv('MAILSEND_API_KEY')) # Environment variable for Mailersend API Key
 feed_id = "40833"                                       # Broadcastify Feed ID
+
+web_url = "https://www.broadcastify.com/listen/feed/" + feed_id
 
 # Phone carrier dictionary
 carrier_mapping = {
@@ -41,12 +45,9 @@ def mail(subject, content):
         if len(number) >= 2:  # Make sure that both the number and carrier exist in the text file
           phone_number = int(number[0])
           provider = number[1]
-          print(phone_number)
-          print(provider)
           if provider in carrier_mapping:
             adjusted_carrier = carrier_mapping[provider]
             email = str(phone_number) + "@" + adjusted_carrier
-            print("Email is %s" % email)
 
             # Create a new email_info dictionary for each email
             email_info = {
@@ -67,8 +68,8 @@ def mail(subject, content):
             mail_list.append(email_info)
         else:
           print("Invalid line:", line)
-    print(mail_list)
-    # print(mailer.send_bulk(mail_list))  # Send Email
+    #print(mail_list)
+    print(mailer.send_bulk(mail_list))  # Send Email
   except Exception as e:
     print(e)
 
@@ -78,6 +79,7 @@ state_file_path = "previous_state.txt" # Use a state file in order to understand
 try:
   with open(state_file_path, "r") as state_file:
     previous_state = state_file.read().strip()
+    #print("previous state is %s" % previous_state) # For debugging
 except FileNotFoundError:
   print("Creating state file")
   previous_state = None
@@ -100,17 +102,39 @@ try:
     county_name = county_info['name']
     county_state = county_info["stateName"]
 
-    if int(listeners) > 40:  # If there is an alert
-      #current_value = data["specific_field"] # Data for the alert message
-      #if previous_state is None or previous_state != current_value:
-        print("%s %s" % (feed_name, str(listeners)))
-        mail("Feed " + feed_name + " has an alert!", "Feed " + feed_name + " has an alert! It also has " + str(listeners) + " listeners. This is a TEST ONLY. This is not a real alert.")
-        print("Feed Name: %s, %s County - %s" % (feed_name, county_name, county_state))
-        print("Listeners: %d" % listeners)
+    # Because the API will not return information about an alert (according to support), just do a basic web get request
+    website_response = requests.get(web_url) # Fetch the data from the Broadcastify feed
+    if website_response.status_code == 200:
+      # Parse the HTML content of the page
+      soup = BeautifulSoup(website_response.text, 'html.parser')
 
-        # Save the updated state to the file
-        with open(state_file_path, "w") as state_file:
-          state_file.write(str(current_value))
+      # Find the div with class "messageBox"
+      message_box = soup.find('div', class_='messageBox')
+      if message_box:
+        current_value = message_box.get_text(separator=' ')
+
+        # Remove the "(x minutes ago)" part using regular expressions
+        current_value = re.sub(r'\(\d+ minutes ago\)', '', current_value).strip()
+        # Replace newline characters with spaces
+        current_value = current_value.replace('\n', ' ').replace('\r', '')
+
+        # If the div with class "messageBox" is found, print its contents
+        #print("message is %s" % current_value)
+        if previous_state is None or previous_state != current_value: # Only send text if the message is recent.
+          print("The Roseburg Receiver - Feed %s | %s County, %s has an alert! Alert: %s" % (feed_name, county_name, county_state, current_value))
+          #mail("The Roseburg Receiver", "The Roseburg Receiver - " + feed_name + " | " + county_name + " County, " + county_state + " has an alert! Alert: " + current_value)
+          mail("The Roseburg Receiver", "Alert " + current_value)
+          # Save the updated state to the file
+          with open(state_file_path, "w") as state_file:
+            state_file.write(str(current_value))
+        else:
+          print("Alert is already in state file")
+      else:
+        # If the div is not found, print "No messages"
+        print("No messages")
+    else:
+      # If the GET request was not successful, print an error message
+      print("Failed to retrieve the website content")
   else:
     print("Failed to retrieve data from the API. Status code:",
       response.status_code)
