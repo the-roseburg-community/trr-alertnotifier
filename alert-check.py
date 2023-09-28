@@ -23,6 +23,7 @@ web_url = "https://www.broadcastify.com/listen/feed/" + feed_id
 carrier_mapping = {
   "att": "txt.att.net",
   "boostmobile": "sms.myboostmobile.com",
+  "consumercellular": "mailmymobile.net",
   "cricketwireless": "sms.cricketwireless.net",
   "googlefi": "msg.fi.google.com",
   "metropcs": "mymetropcs.com",
