@@ -81,7 +81,7 @@ try:
     previous_state = state_file.read().strip()
     #print("previous state is %s" % previous_state) # For debugging
 except FileNotFoundError:
-  print("Creating state file")
+  print("No state file")
   previous_state = None
 
 try:
