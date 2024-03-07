@@ -33,6 +33,7 @@ carrier_mapping = {
   "tmobile": "tmomail.net",
   "uscellular": "email.uscc.net",
   "verizon": "vtext.com",
+  "visible": "vzwpix.com",
   "xfinity": "vtext.com"
 }
 
